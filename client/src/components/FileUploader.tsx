@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Box, CssBaseline, Button, Grid } from "@mui/material";
+import {
+  Box,
+  CssBaseline,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
@@ -21,10 +29,22 @@ export default function FileUploader() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
+
+      console.log(e.target.files);
     }
   };
 
-  const handleUpload = () => {};
+  const handleUpload = async () => {
+    const response = await fetch("http://localhost:5000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: file!.name }),
+    });
+
+    console.log("response", response);
+  };
 
   return (
     <Grid
@@ -62,22 +82,34 @@ export default function FileUploader() {
           tabIndex={-1}
           startIcon={<CloudUploadIcon />}
         >
-          Upload file
-          <VisuallyHiddenInput type="file" />
+          Select a file
+          <VisuallyHiddenInput type="file" onChange={handleFileChange} />
         </Button>
-      </Box>
-      {file && (
-        <section>
-          File details:
-          <ul>
-            <li>Name: {file.name}</li>
-            <li>Type: {file.type}</li>
-            <li>Size: {file.size} bytes</li>
-          </ul>
-        </section>
-      )}
 
-      {file && <button onClick={handleUpload}>Upload a file</button>}
+        {file && (
+          <Card sx={{ display: "flex", margin: 2 }}>
+            <CardContent sx={{ flex: 1 }}>
+              <Typography component="h5" variant="h6">
+                {file.name}
+              </Typography>
+              <Typography>{file.type}</Typography>
+              <Typography>{file.size}</Typography>
+            </CardContent>
+          </Card>
+        )}
+
+        {file && (
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            onClick={handleUpload}
+          >
+            Upload the file
+          </Button>
+        )}
+      </Box>
     </Grid>
   );
 }
