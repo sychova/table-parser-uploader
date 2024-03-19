@@ -7,12 +7,14 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "nodemon src/app/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migration:generate": "npx --no-install typeorm-ts-node-commonjs migration:generate --dataSource ./src/data-source.ts",
+    "migration:create": "npx --no-install typeorm-ts-node-commonjs migration:create",
+    "migration:show": "npx --no-install typeorm-ts-node-commonjs migration:show --dataSource ./src/data-source.ts",
+    "migration:run": "npx --no-install typeorm-ts-node-commonjs migration:run --dataSource ./src/data-source.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.30",
     "nodemon": "^3.1.0",
@@ -20,9 +22,13 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "reflect-metadata": "^0.2.1",
+    "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.5.0"
   }
 }
