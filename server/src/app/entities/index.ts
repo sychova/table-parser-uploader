@@ -1,3 +1,3 @@
-import Uploads from "./uploads";
+import UploadsLog from "./uploadsLog";
 
-export { Uploads };
+export { UploadsLog };
