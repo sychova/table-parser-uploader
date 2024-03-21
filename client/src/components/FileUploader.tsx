@@ -29,21 +29,18 @@ export default function FileUploader() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
-
-      console.log(e.target.files);
     }
   };
 
   const handleUpload = async () => {
-    const response = await fetch("http://localhost:5000/", {
+    const response = await fetch("http://localhost:5000/uploads", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": file!.type,
+        "Content-Length": `${file!.size}`,
       },
-      body: JSON.stringify({ name: file!.name }),
+      body: file,
     });
-
-    console.log("response", response);
   };
 
   return (

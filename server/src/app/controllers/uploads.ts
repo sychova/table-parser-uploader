@@ -16,6 +16,8 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
 
 const create = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
+
     const upload: UploadsLog = await uploadsService.create({
       name: req.body.name,
       size: req.body.size,

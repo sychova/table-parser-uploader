@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Table,
@@ -12,13 +12,27 @@ import {
 
 import Title from "./Title";
 
-const rows = [
-  { id: 1, name: "coorsData", uploadDate: new Date() },
-  { id: 2, name: "userData", uploadDate: new Date() },
-  { id: 3, name: "someStuff", uploadDate: new Date() },
-];
-
 export default function UploadHistory() {
+  const [uploads, setUploads] = useState([]);
+
+  const handleGetUploads = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/uploads", {
+        method: "GET",
+      });
+
+      const data = await response.json();
+
+      setUploads(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetUploads();
+  }, []);
+
   return (
     <Grid
       item
@@ -56,18 +70,16 @@ export default function UploadHistory() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {uploads.map((upload: any) => (
                   <TableRow
-                    key={row.id}
+                    key={upload.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.id}
+                      {upload.id}
                     </TableCell>
-                    <TableCell align="right">{row.name}</TableCell>
-                    <TableCell align="right">
-                      {row.uploadDate.toDateString()}
-                    </TableCell>
+                    <TableCell align="right">{upload.name}</TableCell>
+                    <TableCell align="right">{upload.createdDate}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
