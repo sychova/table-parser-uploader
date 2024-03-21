@@ -1,3 +1,5 @@
 import UploadsLog from "./uploadsLog";
+import ImportType from "./importType";
+import ImportTypeActions from "./importTypeActions";
 
-export { UploadsLog };
+export { UploadsLog, ImportType, ImportTypeActions };
