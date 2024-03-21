@@ -8,7 +8,7 @@ const ormconfig: DataSourceOptions = {
   username: "postgres",
   password: "admin",
   database: "table-parser-uploader",
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ["./src/app/entities/*.{js,ts}"],
   migrations: ["./src/migrations/*.{js,ts}"],
