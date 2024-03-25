@@ -1,7 +1,8 @@
 import multer from "multer";
-import path from "path";
+import { extname } from "path";
+import fs from "fs";
 
-// const ALLOWED_EXTENSIONS = [".csv", ".xls", ".xlsx", ".jpg", ".png"];
+const ALLOWED_EXTENSIONS = [".csv", ".xls", ".xlsx", ".png"];
 
 // const singleFile = multer({
 //   limits: {
@@ -35,15 +36,28 @@ import path from "path";
 //   });
 // };
 
+const pathCreator = (originalname: string) => {
+  const fullDate = new Date();
+
+  const year = fullDate.getFullYear();
+  const month = fullDate.getMonth() + 1;
+  const fullMonth = month.toString().length > 1 ? month : `0${month}`;
+  const day = fullDate.getDate();
+
+  return `files/${year}/${fullMonth}/${day}`;
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "files/");
+    const path = pathCreator(file.originalname);
+    fs.mkdirSync(path, { recursive: true });
+    cb(null, path);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
 });
 
-const singleFileUpload = multer({ storage: storage }).single("file");
+const singleFileUpload = multer({ storage }).single("file");
 
 export default singleFileUpload;

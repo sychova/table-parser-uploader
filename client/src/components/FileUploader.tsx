@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   Typography,
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -27,9 +28,21 @@ export default function FileUploader(props: any) {
   const { uploads, setUploads } = props;
 
   const [file, setFile] = useState<File | null>(null);
+  const [extensionState, setExtensionState] = useState(true);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+  const handleUploadExtensionValidation = async (e: any) => {
+    const ALLOWED_EXTENSIONS = [".csv", ".xlsx", ".xls"];
+    const file = e.target.files[0];
+
+    const extension = file!.name.slice(file!.name.lastIndexOf("."));
+
+    const isAllowedExtension = ALLOWED_EXTENSIONS.includes(extension);
+
+    setExtensionState(isAllowedExtension);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && extensionState) {
       setFile(e.target.files[0]);
     }
   };
@@ -46,6 +59,7 @@ export default function FileUploader(props: any) {
     const data = await response.json();
 
     setUploads([...uploads, data]);
+    setFile(null);
   };
 
   return (
@@ -85,10 +99,24 @@ export default function FileUploader(props: any) {
           startIcon={<CloudUploadIcon />}
         >
           Select a file
-          <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+          <VisuallyHiddenInput
+            type="file"
+            onChange={(e) => {
+              handleUploadExtensionValidation(e);
+              handleFileChange(e);
+            }}
+          />
         </Button>
 
-        {file && (
+        {!extensionState && (
+          <Alert sx={{ display: "flex", margin: 2 }} severity="error">
+            Wrong file extension.
+            <br />
+            Supported extensions: .csv, .xlsx, .xls
+          </Alert>
+        )}
+
+        {file && extensionState && (
           <Card sx={{ display: "flex", margin: 2 }}>
             <CardContent sx={{ flex: 1 }}>
               <Typography component="h5" variant="h6">
@@ -107,6 +135,7 @@ export default function FileUploader(props: any) {
             variant="contained"
             tabIndex={-1}
             onClick={handleUpload}
+            disabled={!extensionState}
           >
             Upload the file
           </Button>
