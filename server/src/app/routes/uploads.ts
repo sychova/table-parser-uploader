@@ -7,10 +7,6 @@ const uploadsRouter: Router = express.Router();
 
 uploadsRouter.get("/", uploadsController.getAll);
 
-uploadsRouter.post(
-  "/",
-  singleFileUpload.single("file"),
-  uploadsController.create
-);
+uploadsRouter.post("/", singleFileUpload, uploadsController.create);
 
 export default uploadsRouter;
