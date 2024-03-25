@@ -19,7 +19,9 @@ const create = async (req: Request, res: Response) => {
     const upload: UploadsLog = await uploadsService.create({
       name: req.file?.originalname,
       size: req.file?.size,
-      format: req.file?.originalname,
+      format: req.file?.originalname.slice(
+        req.file?.originalname.lastIndexOf(".")
+      ),
     });
 
     res.json(upload);
