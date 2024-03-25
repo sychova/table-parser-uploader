@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import {
   Grid,
   Table,
@@ -12,26 +12,8 @@ import {
 
 import Title from "./Title";
 
-export default function UploadHistory() {
-  const [uploads, setUploads] = useState([]);
-
-  const handleGetUploads = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/uploads", {
-        method: "GET",
-      });
-
-      const data = await response.json();
-
-      setUploads(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    handleGetUploads();
-  }, []);
+export default function UploadHistory(props: any): ReactElement {
+  const { uploads } = props;
 
   return (
     <Grid

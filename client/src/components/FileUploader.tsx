@@ -23,7 +23,9 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function FileUploader() {
+export default function FileUploader(props: any) {
+  const { uploads, setUploads } = props;
+
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,14 +35,17 @@ export default function FileUploader() {
   };
 
   const handleUpload = async () => {
+    const formData: any = new FormData();
+    formData.append("file", file);
+
     const response = await fetch("http://localhost:5000/uploads", {
       method: "POST",
-      headers: {
-        "Content-Type": file!.type,
-        "Content-Length": `${file!.size}`,
-      },
-      body: file,
+      body: formData,
     });
+
+    const data = await response.json();
+
+    setUploads([...uploads, data]);
   };
 
   return (

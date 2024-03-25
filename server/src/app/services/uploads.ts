@@ -13,8 +13,6 @@ const getAll = async (): Promise<UploadsLog[]> => {
 };
 
 const create = async (newUploadData: any) => {
-  console.log(newUploadData);
-
   const upload: UploadsLog = new UploadsLog();
   upload.name = newUploadData.name;
   upload.size = newUploadData.size;
