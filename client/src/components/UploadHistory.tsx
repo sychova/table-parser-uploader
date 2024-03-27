@@ -53,7 +53,6 @@ export default function UploadHistory(props: any): ReactElement {
               </TableHead>
               <TableBody>
                 {uploads.map((upload: any) => {
-                  console.log("upload", upload);
                   return (
                     <TableRow
                       key={upload.id}

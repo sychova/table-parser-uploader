@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
+import XLSX from "xlsx";
 
 import { AppDataSource } from "../../data-source";
 import { UploadsLog } from "../entities";
@@ -14,6 +15,15 @@ const parseCSV = async (file: any): Promise<void> => {
 const parseXLSX = async (file: any): Promise<void> => {
   console.log("xls or xlsx");
   console.log("file", file);
+
+  const fileRead = XLSX.readFile(`${file.destination}/${file.originalname}`);
+  const fileSheets = fileRead.SheetNames;
+  const fileData = XLSX.utils.sheet_to_json(fileRead.Sheets[fileSheets[0]], {
+    blankrows: false,
+    defval: "",
+  });
+
+  console.log("fileData", fileData);
 };
 
 const parse = async (file: any): Promise<void> => {
