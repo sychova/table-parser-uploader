@@ -15,6 +15,9 @@ export default class UploadsLog extends Base {
   @Column({ default: null })
   format: string;
 
+  @Column({ default: null })
+  path: string;
+
   @ManyToOne(() => ImportType, (importType) => importType.uploads)
   importType: ImportType;
 
