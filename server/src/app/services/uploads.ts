@@ -17,6 +17,7 @@ const create = async (newUploadData: any) => {
   upload.name = newUploadData.name;
   upload.size = newUploadData.size;
   upload.format = newUploadData.format;
+  upload.path = newUploadData.path;
   const newUpload: UploadsLog = await uploadsRepository.save(upload);
   return newUpload;
 };

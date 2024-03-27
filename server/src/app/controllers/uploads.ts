@@ -25,6 +25,7 @@ const create = async (req: Request, res: Response) => {
       format: req.file?.originalname.slice(
         req.file?.originalname.lastIndexOf(".")
       ),
+      path: `${req.file?.destination}/${req.file?.originalname}`,
     });
 
     res.json(upload);
