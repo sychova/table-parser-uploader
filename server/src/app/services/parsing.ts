@@ -21,7 +21,14 @@ const parseXLSX = async (file: any): Promise<void> => {
     defval: "",
   });
 
+  const fileActions = XLSX.utils.sheet_to_json(fileRead.Sheets[fileSheets[1]], {
+    blankrows: false,
+    defval: "",
+  });
+
   console.log("fileData", fileData);
+
+  console.log("fileActions", fileActions);
 };
 
 const parse = async (file: any): Promise<void> => {

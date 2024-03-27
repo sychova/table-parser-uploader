@@ -46,26 +46,26 @@ export default function UploadHistory(props: any): ReactElement {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell>Id</TableCell>
-                  <TableCell align="right">Name</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="right">Import type</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                   <TableCell align="right">Upload date</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {uploads.map((upload: any) => {
-                  return (
-                    <TableRow
-                      key={upload.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {upload.id}
-                      </TableCell>
-                      <TableCell align="right">{upload.name}</TableCell>
-                      <TableCell align="right">{upload.createdDate}</TableCell>
-                    </TableRow>
-                  );
-                })}
+                {uploads.map((upload: any) => (
+                  <TableRow
+                    key={upload.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {upload.name}
+                    </TableCell>
+                    <TableCell align="right">{upload.importType}</TableCell>
+                    <TableCell align="right">{upload.actions}</TableCell>
+                    <TableCell align="right">{upload.createdDate}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

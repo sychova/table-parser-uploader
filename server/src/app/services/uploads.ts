@@ -7,7 +7,12 @@ const uploadsRepository: Repository<UploadsLog> =
   AppDataSource.getRepository(UploadsLog);
 
 const getAll = async (): Promise<UploadsLog[]> => {
-  const uploads: UploadsLog[] = await uploadsRepository.find();
+  const uploads: UploadsLog[] = await uploadsRepository.find({
+    relations: {
+      importType: true,
+      actions: true,
+    },
+  });
 
   return uploads;
 };
