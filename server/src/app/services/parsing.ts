@@ -9,12 +9,10 @@ const uploadsRepository: Repository<UploadsLog> =
 
 const parseCSV = async (file: any): Promise<void> => {
   console.log("csv");
-  console.log("file", file);
 };
 
 const parseXLSX = async (file: any): Promise<void> => {
   console.log("xls or xlsx");
-  console.log("file", file);
 
   const fileRead = XLSX.readFile(`${file.destination}/${file.originalname}`);
   const fileSheets = fileRead.SheetNames;

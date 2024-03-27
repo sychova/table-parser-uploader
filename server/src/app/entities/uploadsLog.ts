@@ -1,8 +1,16 @@
-import { Entity, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+} from "typeorm";
 
 import Base from "./base";
 import ImportType from "./importType";
 import ImportTypeActions from "./importTypeActions";
+import DimensionCoordinates from "./dimensionCoordinates";
 
 @Entity("uploads_log")
 export default class UploadsLog extends Base {
@@ -24,4 +32,10 @@ export default class UploadsLog extends Base {
   @ManyToMany(() => ImportTypeActions)
   @JoinTable()
   actions: ImportTypeActions[];
+
+  @OneToMany(
+    () => DimensionCoordinates,
+    (coordinateSet) => coordinateSet.importData
+  )
+  data: DimensionCoordinates[];
 }
