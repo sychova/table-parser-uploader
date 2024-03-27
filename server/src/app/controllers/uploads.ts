@@ -1,52 +1,10 @@
 import { Request, Response } from "express";
 
-import { ImportType, ImportTypeActions, UploadsLog } from "../entities";
-import { uploadsService } from "../services";
-import { Repository } from "typeorm";
-import { AppDataSource } from "../../data-source";
-import {
-  ImportTypeActionsDimensionCoordinatesSeed,
-  ImportTypeDimensionCoordinatesSeed,
-} from "../../migrations/seeds/importTypeDimensionCoordinates.seed";
+import { UploadsLog } from "../entities";
+import { parsingService, uploadsService } from "../services";
 
 const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    const importTypeRepo: Repository<ImportType> =
-      AppDataSource.getRepository(ImportType);
-
-    // const importTypeActionsRepo: Repository<ImportTypeActions> =
-    //   AppDataSource.getRepository(ImportTypeActions);
-
-    // const eee = await AppDataSource.getRepository("import_type_actions").save(
-    //   ImportTypeActionsDimensionCoordinatesSeed
-    // );
-
-    // console.log("eee", eee);
-
-    // const yyy = await AppDataSource.getRepository("import_type").save(
-    //   ImportTypeDimensionCoordinatesSeed
-    // );
-
-    // console.log("yyy", yyy);
-
-    const importTypeRepoqqq = async () => {
-      const rrr = await importTypeRepo.find({ relations: { actions: true } });
-
-      console.log("importTypeRepoqqq", rrr);
-    };
-
-    await importTypeRepoqqq();
-
-    // const importTypeActionsRepoqqq = async () => {
-    //   const rrr = await importTypeActionsRepo.find({
-    //     relations: { importType: true },
-    //   });
-
-    //   console.log("importTypeActionsRepoqqq", rrr);
-    // };
-
-    // await importTypeActionsRepoqqq();
-
     const uploads: UploadsLog[] = await uploadsService.getAll();
 
     res.json(uploads);
@@ -58,6 +16,9 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
 
 const create = async (req: Request, res: Response) => {
   try {
+    await parsingService.parse(req.file);
+    // const parsingResult = await parsingService.parse(req.file);
+
     const upload: UploadsLog = await uploadsService.create({
       name: req.file?.originalname,
       size: req.file?.size,

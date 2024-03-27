@@ -35,5 +35,14 @@ export class SeedImportTypes1711457333537 implements MigrationInterface {
     });
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.manager
+      .createQueryBuilder()
+      .delete()
+      .from("import_type")
+      .where("import_type.name = :ImportTypeDimensionCoordinatesSeed", {
+        name: ImportTypeDimensionCoordinatesSeed,
+      })
+      .execute();
+  }
 }

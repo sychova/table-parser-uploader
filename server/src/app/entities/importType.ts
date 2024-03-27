@@ -14,7 +14,8 @@ export default class ImportType extends Base {
 
   @OneToMany(
     () => ImportTypeActions,
-    (importTypeAction) => importTypeAction.importType
+    (importTypeAction) => importTypeAction.importType,
+    { cascade: true }
   )
   actions: ImportTypeActions[];
 }
