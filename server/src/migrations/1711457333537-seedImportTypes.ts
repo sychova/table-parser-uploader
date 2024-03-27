@@ -10,7 +10,7 @@ export class SeedImportTypes1711457333537 implements MigrationInterface {
     await queryRunner.manager
       .createQueryBuilder()
       .insert()
-      .into(ImportType)
+      .into("import_type")
       .values([{ name: ImportTypeDimensionCoordinatesSeed }])
       .execute();
 
@@ -25,7 +25,7 @@ export class SeedImportTypes1711457333537 implements MigrationInterface {
         .getRawOne()
     ).id;
 
-    await ImportTypeActionsDimensionCoordinatesSeed.forEach(async (elem) => {
+    ImportTypeActionsDimensionCoordinatesSeed.forEach(async (elem) => {
       await queryRunner.manager
         .createQueryBuilder()
         .insert()

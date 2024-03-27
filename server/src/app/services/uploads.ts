@@ -8,11 +8,10 @@ const uploadsRepository: Repository<UploadsLog> =
 
 const getAll = async (): Promise<UploadsLog[]> => {
   const uploads: UploadsLog[] = await uploadsRepository.find({
-    relations: {
-      importType: true,
-      actions: true,
-    },
+    relations: ["importType", "actionParams", "actionParams.action"],
   });
+
+  console.log("uploads", uploads);
 
   return uploads;
 };

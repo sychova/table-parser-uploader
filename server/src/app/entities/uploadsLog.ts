@@ -9,8 +9,8 @@ import {
 
 import Base from "./base";
 import ImportType from "./importType";
-import ImportTypeActions from "./importTypeActions";
 import DimensionCoordinates from "./dimensionCoordinates";
+import UploadsLogActionsParams from "./uploadsLogActionsParams";
 
 @Entity("uploads_log")
 export default class UploadsLog extends Base {
@@ -29,13 +29,15 @@ export default class UploadsLog extends Base {
   @ManyToOne(() => ImportType, (importType) => importType.uploads)
   importType: ImportType;
 
-  @ManyToMany(() => ImportTypeActions)
-  @JoinTable()
-  actions: ImportTypeActions[];
-
   @OneToMany(
     () => DimensionCoordinates,
     (coordinateSet) => coordinateSet.importData
   )
   data: DimensionCoordinates[];
+
+  @OneToMany(
+    () => UploadsLogActionsParams,
+    (uploadsLogActionsParams) => uploadsLogActionsParams.upload
+  )
+  actionParams: UploadsLogActionsParams[];
 }
