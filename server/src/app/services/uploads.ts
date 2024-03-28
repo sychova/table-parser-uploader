@@ -11,19 +11,20 @@ const getAll = async (): Promise<UploadsLog[]> => {
     relations: ["importType", "actionParams", "actionParams.action"],
   });
 
-  console.log("uploads", uploads);
-
   return uploads;
 };
 
 const create = async (newUploadData: any) => {
-  const upload: UploadsLog = new UploadsLog();
-  upload.name = newUploadData.name;
-  upload.size = newUploadData.size;
-  upload.format = newUploadData.format;
-  upload.path = newUploadData.path;
-  const newUpload: UploadsLog = await uploadsRepository.save(upload);
-  return newUpload;
+  const upload: UploadsLog = uploadsRepository.create({
+    name: newUploadData.name,
+    size: newUploadData.size,
+    format: newUploadData.format,
+    path: newUploadData.path,
+  });
+
+  await uploadsRepository.save(upload);
+
+  return upload;
 };
 
 export { getAll, create };
