@@ -55,6 +55,20 @@ const parse = async (file: any): Promise<void> => {
   }
 };
 
+const getActionIds = async (actions: any) => {
+  const actionsIds: any = {};
+  for (const elem of actions) {
+    const actionId: any = await importTypeActionsRepository.findOne({
+      select: ["id"],
+      where: { name: elem.action },
+    });
+
+    actionsIds[elem.action] = actionId.id;
+  }
+
+  return actionsIds;
+};
+
 const saveData = async (logId: any, parsedData: any) => {
   const data = parsedData.map((elem: any) => {
     elem.importData = logId;
@@ -70,15 +84,7 @@ const saveData = async (logId: any, parsedData: any) => {
 };
 
 const saveActions = async (logId: any, parsedActions: any) => {
-  const actionsIds: any = {};
-  for (const elem of parsedActions) {
-    const actionId: any = await importTypeActionsRepository.findOne({
-      select: ["id"],
-      where: { name: elem.action },
-    });
-
-    actionsIds[elem.action] = actionId.id;
-  }
+  const actionsIds: any = await getActionIds(parsedActions);
 
   const actions = await parsedActions.map((elem: any) => {
     elem.upload = logId;
@@ -94,4 +100,4 @@ const saveActions = async (logId: any, parsedActions: any) => {
     .execute();
 };
 
-export { parse, saveData, saveActions };
+export { parse, saveData, saveActions, getActionIds };

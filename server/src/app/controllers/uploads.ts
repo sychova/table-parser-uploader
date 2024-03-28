@@ -45,7 +45,7 @@ const create = async (req: Request, res: Response) => {
 
     await parsingService.saveActions(upload.id, parsedFile.actions);
 
-    res.json(upload);
+    res.json({ ...upload, actions: parsedFile.actions });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

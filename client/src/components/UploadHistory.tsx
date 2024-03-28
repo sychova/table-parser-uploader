@@ -62,7 +62,13 @@ export default function UploadHistory(props: any): ReactElement {
                       {upload.name}
                     </TableCell>
                     <TableCell align="right">{upload.importType}</TableCell>
-                    <TableCell align="right">{upload.actions}</TableCell>
+                    <TableCell align="right">
+                      {upload.actionParams
+                        .map((elem: any) => {
+                          return elem.action?.name;
+                        })
+                        .join(" | ")}
+                    </TableCell>
                     <TableCell align="right">{upload.createdDate}</TableCell>
                   </TableRow>
                 ))}
