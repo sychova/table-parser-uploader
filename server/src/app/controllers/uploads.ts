@@ -30,22 +30,23 @@ const create = async (req: Request, res: Response) => {
 
     const parsedFile: any = await parsingService.parse(req.file);
 
-    // const validateParsedFile
-
-    const upload: UploadsLog = await uploadsService.create({
+    const upload: any = await uploadsService.create({
       name: req.file?.originalname,
       size: req.file?.size,
       format: req.file?.originalname.slice(
         req.file?.originalname.lastIndexOf(".")
       ),
       path: `${req.file?.destination}/${req.file?.originalname}`,
+      importType: 1,
     });
 
     await parsingService.saveData(upload.id, parsedFile.data);
 
     await parsingService.saveActions(upload.id, parsedFile.actions);
 
-    res.json({ ...upload, actions: parsedFile.actions });
+    const newFullUpload = await uploadsService.getById(upload.id);
+
+    res.json(newFullUpload);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

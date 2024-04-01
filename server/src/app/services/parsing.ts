@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import XLSX from "xlsx";
+import csvtojson from "csvtojson";
 
 import { AppDataSource } from "../../data-source";
 import { ImportTypeActions, UploadsLogActionsParams } from "../entities";
@@ -15,7 +16,14 @@ const uploadsLogActionsParams: Repository<UploadsLogActionsParams> =
   AppDataSource.getRepository(UploadsLogActionsParams);
 
 const parseCSV = async (file: any): Promise<any> => {
-  console.log("csv");
+  const data = await csvtojson().fromFile(
+    `${file.destination}/${file.originalname}`
+  );
+
+  return {
+    data,
+    actions: [],
+  };
 };
 
 const parseXLSX = async (file: any): Promise<any> => {

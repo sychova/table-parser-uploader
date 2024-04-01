@@ -14,6 +14,15 @@ const getAll = async (): Promise<UploadsLog[]> => {
   return uploads;
 };
 
+const getById = async (uploadId: any): Promise<any> => {
+  const upload = await uploadsRepository.findOne({
+    where: { id: uploadId },
+    relations: ["importType", "actionParams", "actionParams.action"],
+  });
+
+  return upload;
+};
+
 const create = async (newUploadData: any) => {
   const upload: UploadsLog = uploadsRepository.create({
     name: newUploadData.name,
@@ -27,4 +36,4 @@ const create = async (newUploadData: any) => {
   return upload;
 };
 
-export { getAll, create };
+export { getAll, getById, create };
