@@ -40,8 +40,10 @@ export default function ActionsConfig({
       setActionParamSets(() => [
         ...actionParamSets,
         {
-          id: actionParamSets.length,
-          action,
+          id: action,
+          action: actions
+            .filter((elem) => elem.id === action)
+            .map((elem) => elem.name),
           param,
         },
       ]);
@@ -74,7 +76,7 @@ export default function ActionsConfig({
             onChange={(e) => setAction(e.target.value)}
           >
             {actions.map((actionItem) => (
-              <MenuItem key={actionItem.id} value={actionItem.name}>
+              <MenuItem key={actionItem.id} value={actionItem.id}>
                 {actionItem.name}
               </MenuItem>
             ))}
