@@ -5,8 +5,6 @@ export default function ActionParamElement(props: any) {
   const { action, setActionParamSets } = props;
 
   const handleDeleteActionParamSetDelete = async (id: any) => {
-    console.log("id", id);
-
     setActionParamSets((actionParamSets: any) =>
       actionParamSets.filter((element: any) => element.id !== id)
     );
