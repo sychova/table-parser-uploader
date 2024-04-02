@@ -12,6 +12,10 @@ import {
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
+import ActionsConfig from "./ActionParamAdd";
+import ActionConfig from "./ActionParamList";
+import Title from "./Title";
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -28,21 +32,24 @@ export default function FileUploader(props: any) {
   const { uploads, setUploads } = props;
 
   const [file, setFile] = useState<File | null>(null);
-  const [extensionState, setExtensionState] = useState(true);
+  const [extension, setExtension] = useState("");
+  const [isAllowedExtension, setIsAllowedExtension] = useState(true);
+  const [actionParamSets, setActionParamSets] = useState<
+    { action: string; param: string }[]
+  >([]);
 
   const handleUploadExtensionValidation = async (e: any) => {
     const ALLOWED_EXTENSIONS = [".csv", ".xlsx", ".xls"];
     const file = e.target.files[0];
 
     const extension = file!.name.slice(file!.name.lastIndexOf("."));
+    setExtension(extension);
 
-    const isAllowedExtension = ALLOWED_EXTENSIONS.includes(extension);
-
-    setExtensionState(isAllowedExtension);
+    setIsAllowedExtension(ALLOWED_EXTENSIONS.includes(extension));
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && extensionState) {
+    if (e.target.files && isAllowedExtension) {
       setFile(e.target.files[0]);
     }
   };
@@ -80,67 +87,94 @@ export default function FileUploader(props: any) {
         gap: 4,
       }}
     >
-      <Box
-        component="form"
-        style={{
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <CssBaseline />
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-        >
-          Select a file
-          <VisuallyHiddenInput
-            type="file"
-            onChange={(e) => {
-              handleUploadExtensionValidation(e);
-              handleFileChange(e);
+      <CssBaseline />
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            sx={{
+              display: "flex",
+              flexWrap: "nowrap",
+              alignItems: "center",
+              "& > :not(style)": { m: 1 },
             }}
-          />
-        </Button>
-
-        {!extensionState && (
-          <Alert sx={{ display: "flex", margin: 2 }} severity="error">
-            Wrong file extension.
-            <br />
-            Supported extensions: .csv, .xlsx, .xls
-          </Alert>
-        )}
-
-        {file && extensionState && (
-          <Card sx={{ display: "flex", margin: 2 }}>
-            <CardContent sx={{ flex: 1 }}>
-              <Typography component="h5" variant="h6">
-                {file.name}
-              </Typography>
-              <Typography>{file.type}</Typography>
-              <Typography>{file.size}</Typography>
-            </CardContent>
-          </Card>
-        )}
-
-        {file && (
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            onClick={handleUpload}
-            disabled={!extensionState}
           >
-            Upload the file
-          </Button>
-        )}
-      </Box>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Select file
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => {
+                  handleUploadExtensionValidation(e);
+                  handleFileChange(e);
+                }}
+              />
+            </Button>
+
+            {file && (
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                onClick={handleUpload}
+                disabled={!isAllowedExtension}
+              >
+                Upload file
+              </Button>
+            )}
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          {file && isAllowedExtension && (
+            <Card sx={{ display: "flex", margin: 2 }}>
+              <CardContent sx={{ flex: 1 }}>
+                <Typography component="h5" variant="h6">
+                  {file.name}
+                </Typography>
+                <Typography>{file.type}</Typography>
+                <Typography>{file.size}</Typography>
+              </CardContent>
+            </Card>
+          )}
+
+          {!isAllowedExtension && (
+            <Alert sx={{ display: "flex", margin: 2 }} severity="error">
+              Wrong file extension.
+              <br />
+              Supported extensions: .csv, .xlsx, .xls
+            </Alert>
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          {file && extension === ".csv" && (
+            <>
+              {actionParamSets.length > 0 && (
+                <>
+                  <Title>Selected actions</Title>
+                  {actionParamSets.map((action) => (
+                    <ActionConfig
+                      key={actionParamSets.length}
+                      action={action.action}
+                      param={action.param}
+                    />
+                  ))}
+                </>
+              )}
+
+              <ActionsConfig
+                actionParamSets={actionParamSets}
+                setActionParamSets={setActionParamSets}
+              />
+            </>
+          )}
+        </Grid>
+      </Grid>
     </Grid>
   );
 }
