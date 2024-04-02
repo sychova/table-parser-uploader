@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   FormControl,
@@ -17,8 +17,23 @@ export default function ActionsConfig({
   actionParamSets,
   setActionParamSets,
 }: any) {
+  const [actions, setActions] = useState<any[]>([]);
   const [action, setAction] = useState("");
   const [param, setParam] = useState("");
+
+  const handleGetAllActions = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/actions", {
+        method: "GET",
+      });
+
+      const data = await response.json();
+
+      setActions(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAddAction = () => {
     if (action && param) {
@@ -31,6 +46,10 @@ export default function ActionsConfig({
       ]);
     }
   };
+
+  useEffect(() => {
+    handleGetAllActions();
+  }, []);
 
   return (
     <>
@@ -53,15 +72,9 @@ export default function ActionsConfig({
             label="Action"
             onChange={(e) => setAction(e.target.value)}
           >
-            <MenuItem value={1}>Rotate around the X-axis</MenuItem>
-            <MenuItem value={1}>Rotate around the Y-axis</MenuItem>
-            <MenuItem value={1}>Rotate around the Z-axis</MenuItem>
-            <MenuItem value={1}>Move along the X-axis</MenuItem>
-            <MenuItem value={1}>Move along the Y-axis</MenuItem>
-            <MenuItem value={1}>Move along the Z-axis</MenuItem>
-            <MenuItem value={1}>Reflect over the X-axis</MenuItem>
-            <MenuItem value={1}>Reflect over the Y-axis</MenuItem>
-            <MenuItem value={1}>Reflect over the Z-axis</MenuItem>
+            {actions.map((actionItem) => (
+              <MenuItem value={actionItem.name}>{actionItem.name}</MenuItem>
+            ))}
           </Select>
           <FormHelperText>Required</FormHelperText>
         </FormControl>

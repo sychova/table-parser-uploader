@@ -1,12 +1,15 @@
 const ImportTypeDimensionCoordinatesSeed = "dimensionCoordinates";
 
 const ImportTypeActionsDimensionCoordinatesSeed = [
-  { name: "multiply" },
-  { name: "closest" },
-  { name: "farthest" },
-  { name: "centroid" },
-  { name: "boundingBox" },
-  { name: "rotate" },
+  { name: "rotateByX" },
+  { name: "rotateByY" },
+  { name: "rotateByZ" },
+  { name: "reflectByX" },
+  { name: "reflectByY" },
+  { name: "reflectByZ" },
+  { name: "moveByX" },
+  { name: "moveByY" },
+  { name: "moveByZ" },
 ];
 
 export {

@@ -5,7 +5,7 @@ dotenv.config();
 import { createDatabase } from "typeorm-extension";
 
 import { ormconfig, AppDataSource } from "../data-source";
-import { uploadsRouter } from "./routes";
+import { uploadsRouter, actionsRouter } from "./routes";
 
 const app = express();
 
@@ -33,6 +33,7 @@ app.use(
 })();
 
 app.use("/uploads", uploadsRouter);
+app.use("/actions", actionsRouter);
 
 const port = 5000;
 
