@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import ActionsConfig from "./ActionParamAdd";
-import ActionConfig from "./ActionParamList";
+import ActionConfig from "./ActionParamElement";
 import Title from "./Title";
 
 const VisuallyHiddenInput = styled("input")({
@@ -35,7 +35,7 @@ export default function FileUploader(props: any) {
   const [extension, setExtension] = useState("");
   const [isAllowedExtension, setIsAllowedExtension] = useState(true);
   const [actionParamSets, setActionParamSets] = useState<
-    { action: string; param: string }[]
+    { id: number; action: string; param: string }[]
   >([]);
 
   const handleUploadExtensionValidation = async (e: any) => {
@@ -157,11 +157,12 @@ export default function FileUploader(props: any) {
               {actionParamSets.length > 0 && (
                 <>
                   <Title>Selected actions</Title>
-                  {actionParamSets.map((action) => (
+                  {actionParamSets.map((action, index) => (
                     <ActionConfig
-                      key={actionParamSets.length}
-                      action={action.action}
-                      param={action.param}
+                      key={action.id}
+                      action={action}
+                      actionParamSets={actionParamSets}
+                      setActionParamSets={setActionParamSets}
                     />
                   ))}
                 </>

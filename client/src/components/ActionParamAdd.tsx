@@ -40,6 +40,7 @@ export default function ActionsConfig({
       setActionParamSets(() => [
         ...actionParamSets,
         {
+          id: actionParamSets.length,
           action,
           param,
         },
@@ -73,7 +74,9 @@ export default function ActionsConfig({
             onChange={(e) => setAction(e.target.value)}
           >
             {actions.map((actionItem) => (
-              <MenuItem value={actionItem.name}>{actionItem.name}</MenuItem>
+              <MenuItem key={actionItem.id} value={actionItem.name}>
+                {actionItem.name}
+              </MenuItem>
             ))}
           </Select>
           <FormHelperText>Required</FormHelperText>
