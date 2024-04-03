@@ -40,7 +40,7 @@ export default function ActionsConfig({
       setActionParamSets(() => [
         ...actionParamSets,
         {
-          id: action,
+          id: Date.now(),
           action: actions
             .filter((elem) => elem.id === action)
             .map((elem) => elem.name),
