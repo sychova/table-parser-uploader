@@ -4,11 +4,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export default function ActionParamElement(props: any) {
   const { action, setActionParamSets } = props;
 
-  const handleDeleteActionParamSetDelete = async (id: any) => {
-    setActionParamSets((actionParamSets: any) =>
-      actionParamSets.filter((element: any) => element.id !== id)
-    );
+  const handleDeleteActionParamSetDelete = async (keyId: any) => {
+    setActionParamSets((actionParamSets: any) => [
+      ...actionParamSets.filter((element: any) => element.keyId !== keyId),
+    ]);
   };
+
+  console.log("action", action);
 
   return (
     <Box
@@ -27,7 +29,7 @@ export default function ActionParamElement(props: any) {
           size="small"
           color="secondary"
           aria-label="add"
-          onClick={() => handleDeleteActionParamSetDelete(action.id)}
+          onClick={() => handleDeleteActionParamSetDelete(action.keyId)}
         >
           <DeleteIcon />
         </Fab>

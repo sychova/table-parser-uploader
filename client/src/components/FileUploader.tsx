@@ -35,7 +35,7 @@ export default function FileUploader(props: any) {
   const [extension, setExtension] = useState("");
   const [isAllowedExtension, setIsAllowedExtension] = useState(true);
   const [actionParamSets, setActionParamSets] = useState<
-    { id: number; action: string; param: string }[]
+    { id: number; keyId: string; action: string; param: string }[]
   >([]);
 
   const handleUploadExtensionValidation = async (e: any) => {
@@ -157,9 +157,9 @@ export default function FileUploader(props: any) {
               {actionParamSets.length > 0 && (
                 <>
                   <Title>Selected actions</Title>
-                  {actionParamSets.map((action, index) => (
+                  {actionParamSets.map((action, index, arr) => (
                     <ActionConfig
-                      key={action.id}
+                      key={action.keyId}
                       action={action}
                       actionParamSets={actionParamSets}
                       setActionParamSets={setActionParamSets}

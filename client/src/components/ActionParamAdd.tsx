@@ -40,10 +40,11 @@ export default function ActionsConfig({
       setActionParamSets(() => [
         ...actionParamSets,
         {
-          id: Date.now(),
+          id: action,
+          keyId: crypto.randomUUID(),
           action: actions
             .filter((elem) => elem.id === action)
-            .map((elem) => elem.name),
+            .map((elem) => elem.name)[0],
           param,
         },
       ]);
