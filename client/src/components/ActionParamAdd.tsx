@@ -45,7 +45,7 @@ export default function ActionsConfig({
           action: actions
             .filter((elem) => elem.id === action)
             .map((elem) => elem.name)[0],
-          param,
+          param: parseInt(param),
         },
       ]);
     }

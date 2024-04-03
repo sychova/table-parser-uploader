@@ -8,7 +8,7 @@ import UploadsLog from "./uploadsLog";
 @Entity("uploads_log_actions_params")
 export default class UploadsLogActionsParams extends Base {
   @Column()
-  params: string;
+  param: number;
 
   @ManyToOne(() => UploadsLog, (uploadsLog) => uploadsLog.actionParams)
   upload: ImportType;

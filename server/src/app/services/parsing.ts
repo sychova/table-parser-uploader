@@ -91,21 +91,42 @@ const saveData = async (logId: any, parsedData: any) => {
     .execute();
 };
 
-const saveActions = async (logId: any, parsedActions: any) => {
-  const actionsIds: any = await getActionIds(parsedActions);
+const saveActions = async (
+  logId: any,
+  fileExtension: string,
+  parsedActions: any
+) => {
+  if (fileExtension === ".csv") {
+    const actions = await parsedActions.map((elem: any) => {
+      elem.upload = logId;
+      elem.action = elem.id;
+      return elem;
+    });
 
-  const actions = await parsedActions.map((elem: any) => {
-    elem.upload = logId;
-    elem.action = actionsIds[elem.action];
-    return elem;
-  });
+    await uploadsLogActionsParams
+      .createQueryBuilder()
+      .insert()
+      .into("uploads_log_actions_params")
+      .values(actions)
+      .execute();
+  }
 
-  await uploadsLogActionsParams
-    .createQueryBuilder()
-    .insert()
-    .into("uploads_log_actions_params")
-    .values(actions)
-    .execute();
+  if ([".xls", ".xlsx"].includes(fileExtension)) {
+    const actionsIds: any = await getActionIds(parsedActions);
+
+    const actions = await parsedActions.map((elem: any) => {
+      elem.upload = logId;
+      elem.action = actionsIds[elem.action];
+      return elem;
+    });
+
+    await uploadsLogActionsParams
+      .createQueryBuilder()
+      .insert()
+      .into("uploads_log_actions_params")
+      .values(actions)
+      .execute();
+  }
 };
 
 export { parse, saveData, saveActions, getActionIds };

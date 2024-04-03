@@ -16,17 +16,23 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const createCSV = async () => {};
+
+const createXLSX = async () => {};
+
 const create = async (req: Request, res: Response) => {
   try {
-    const isFileExtensionValid = ALLOWED_EXTENSIONS.includes(
-      req.file?.originalname.slice(
-        req.file?.originalname.lastIndexOf(".")
-      ) as string
-    );
+    const fileExtension = req.file?.originalname.slice(
+      req.file?.originalname.lastIndexOf(".")
+    ) as string;
 
-    if (!isFileExtensionValid) {
+    if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
       res.json({ error: "File format not supported" });
     }
+
+    // I only have this if csv
+    // const ttt = JSON.parse(req.body.actionParamSets);
+    // console.log("req.body.actionParamSets", ttt);
 
     const parsedFile: any = await parsingService.parse(req.file);
 
@@ -42,7 +48,23 @@ const create = async (req: Request, res: Response) => {
 
     await parsingService.saveData(upload.id, parsedFile.data);
 
-    await parsingService.saveActions(upload.id, parsedFile.actions);
+    if (fileExtension === ".csv") {
+      const actionParamSets = JSON.parse(req.body.actionParamSets);
+
+      await parsingService.saveActions(
+        upload.id,
+        fileExtension,
+        actionParamSets
+      );
+    }
+
+    if ([".xls", ".xlsx"].includes(fileExtension)) {
+      await parsingService.saveActions(
+        upload.id,
+        fileExtension,
+        parsedFile.actions
+      );
+    }
 
     const newFullUpload = await uploadsService.getById(upload.id);
 

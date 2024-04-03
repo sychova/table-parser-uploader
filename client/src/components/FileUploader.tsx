@@ -35,7 +35,7 @@ export default function FileUploader(props: any) {
   const [extension, setExtension] = useState("");
   const [isAllowedExtension, setIsAllowedExtension] = useState(true);
   const [actionParamSets, setActionParamSets] = useState<
-    { id: number; keyId: string; action: string; param: string }[]
+    { id: number; keyId: string; action: string; param: number }[]
   >([]);
 
   const handleUploadExtensionValidation = async (e: any) => {
@@ -57,6 +57,14 @@ export default function FileUploader(props: any) {
   const handleUpload = async () => {
     const formData: any = new FormData();
     formData.append("file", file);
+    formData.append(
+      "actionParamSets",
+      JSON.stringify(
+        actionParamSets.map((elem) => {
+          return { id: elem.id, param: elem.param };
+        })
+      )
+    );
 
     const response = await fetch("http://localhost:5000/uploads", {
       method: "POST",
