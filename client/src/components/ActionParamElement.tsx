@@ -10,8 +10,6 @@ export default function ActionParamElement(props: any) {
     ]);
   };
 
-  console.log("action", action);
-
   return (
     <Box
       component="form"
