@@ -1,9 +1,10 @@
 import "../App.css";
 import { createTheme, Grid, ThemeProvider } from "@mui/material";
+import { useState, useEffect } from "react";
 
 import FileUploader from "./FileUploader";
 import UploadHistory from "./UploadHistory";
-import { useState, useEffect } from "react";
+import { UploadDb } from "./constants/interfaces";
 
 const theme = createTheme({
   palette: {
@@ -12,7 +13,9 @@ const theme = createTheme({
 });
 
 export default function App() {
-  const [uploads, setUploads] = useState([]);
+  const [uploads, setUploads] = useState<UploadDb[]>([]);
+
+  console.log("uploads", uploads);
 
   const handleGetUploads = async () => {
     try {

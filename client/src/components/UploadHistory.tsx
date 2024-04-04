@@ -11,10 +11,13 @@ import {
 } from "@mui/material";
 
 import Title from "./Title";
+import { UploadDb } from "./constants/interfaces";
 
-export default function UploadHistory(props: any): ReactElement {
-  const { uploads } = props;
-
+export default function UploadHistory({
+  uploads,
+}: {
+  uploads: UploadDb[];
+}): ReactElement {
   return (
     <Grid
       item

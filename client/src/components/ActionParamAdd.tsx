@@ -12,14 +12,18 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 
 import Title from "./Title";
+import { ActionParamSet, ActionDb } from "./constants/interfaces";
 
 export default function ActionsConfig({
   actionParamSets,
   setActionParamSets,
-}: any) {
-  const [actions, setActions] = useState<any[]>([]);
-  const [action, setAction] = useState("");
-  const [param, setParam] = useState("");
+}: {
+  actionParamSets: ActionParamSet[];
+  setActionParamSets: Function;
+}) {
+  const [actionsDb, setActionsDb] = useState<ActionDb[]>([]);
+  const [action, setAction] = useState<number>();
+  const [param, setParam] = useState<number>();
 
   const handleGetAllActions = async () => {
     try {
@@ -29,7 +33,7 @@ export default function ActionsConfig({
 
       const data = await response.json();
 
-      setActions(data);
+      setActionsDb(data);
     } catch (error) {
       console.error(error);
     }
@@ -42,10 +46,10 @@ export default function ActionsConfig({
         {
           id: action,
           keyId: crypto.randomUUID(),
-          action: actions
+          action: actionsDb
             .filter((elem) => elem.id === action)
             .map((elem) => elem.name)[0],
-          param: parseInt(param),
+          param: param,
         },
       ]);
     }
@@ -74,9 +78,9 @@ export default function ActionsConfig({
             id="demo-simple-select"
             value={action}
             label="Action"
-            onChange={(e) => setAction(e.target.value)}
+            onChange={(e) => setAction(Number(e.target.value))}
           >
-            {actions.map((actionItem) => (
+            {actionsDb.map((actionItem) => (
               <MenuItem key={actionItem.id} value={actionItem.id}>
                 {actionItem.name}
               </MenuItem>
@@ -90,7 +94,7 @@ export default function ActionsConfig({
             label="Parameter"
             value={param}
             variant="outlined"
-            onChange={(e) => setParam(e.target.value)}
+            onChange={(e) => setParam(Number(e.target.value))}
           />
           <FormHelperText>Required</FormHelperText>
         </FormControl>

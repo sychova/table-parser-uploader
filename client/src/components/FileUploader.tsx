@@ -13,8 +13,9 @@ import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import ActionsConfig from "./ActionParamAdd";
-import ActionConfig from "./ActionParamElement";
+import ActionParamElement from "./ActionParamElement";
 import Title from "./Title";
+import { ActionParamSet } from "./constants/interfaces";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -32,11 +33,9 @@ export default function FileUploader(props: any) {
   const { uploads, setUploads } = props;
 
   const [file, setFile] = useState<File | null>(null);
-  const [extension, setExtension] = useState("");
-  const [isAllowedExtension, setIsAllowedExtension] = useState(true);
-  const [actionParamSets, setActionParamSets] = useState<
-    { id: number; keyId: string; action: string; param: number }[]
-  >([]);
+  const [extension, setExtension] = useState<string>("");
+  const [isAllowedExtension, setIsAllowedExtension] = useState<boolean>(true);
+  const [actionParamSets, setActionParamSets] = useState<ActionParamSet[]>([]);
 
   const handleUploadExtensionValidation = async (e: any) => {
     const ALLOWED_EXTENSIONS = [".csv", ".xlsx", ".xls"];
@@ -166,10 +165,9 @@ export default function FileUploader(props: any) {
                 <>
                   <Title>Selected actions</Title>
                   {actionParamSets.map((action, index, arr) => (
-                    <ActionConfig
+                    <ActionParamElement
                       key={action.keyId}
-                      action={action}
-                      actionParamSets={actionParamSets}
+                      actionParamSet={action}
                       setActionParamSets={setActionParamSets}
                     />
                   ))}

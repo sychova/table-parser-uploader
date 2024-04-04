@@ -1,9 +1,15 @@
 import { Box, Fab, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ActionParamElement(props: any) {
-  const { action, setActionParamSets } = props;
+import { ActionParamSet } from "./constants/interfaces";
 
+export default function ActionParamElement({
+  actionParamSet,
+  setActionParamSets,
+}: {
+  actionParamSet: ActionParamSet;
+  setActionParamSets: Function;
+}) {
   const handleDeleteActionParamSetDelete = async (keyId: any) => {
     setActionParamSets((actionParamSets: any) => [
       ...actionParamSets.filter((element: any) => element.keyId !== keyId),
@@ -20,14 +26,14 @@ export default function ActionParamElement(props: any) {
         "& > :not(style)": { m: 1, width: "25ch" },
       }}
     >
-      <Typography>{action.action}</Typography>
-      <Typography>{action.param}</Typography>
+      <Typography>{actionParamSet.action}</Typography>
+      <Typography>{actionParamSet.param}</Typography>
       <Box sx={{ "& > :not(style)": { m: 1 } }}>
         <Fab
           size="small"
           color="secondary"
           aria-label="add"
-          onClick={() => handleDeleteActionParamSetDelete(action.keyId)}
+          onClick={() => handleDeleteActionParamSetDelete(actionParamSet.keyId)}
         >
           <DeleteIcon />
         </Fab>
