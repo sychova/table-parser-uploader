@@ -1,14 +1,10 @@
-import { ActionParamsDb } from ".";
+import { ActionParamsDb, BaseDb } from ".";
 
-export default interface UploadDb {
+export default interface UploadDb extends BaseDb {
   actionParams: ActionParamsDb[];
-  createdDate: string;
-  deletedDate: string | null;
   format: string;
-  id: number;
   importType: string;
   name: string;
   path: string;
   size: number;
-  updatedDate: string;
 }
