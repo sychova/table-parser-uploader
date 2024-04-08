@@ -9,4 +9,6 @@ uploadsRouter.get("/", uploadsController.getAll);
 
 uploadsRouter.post("/", singleFileUpload, uploadsController.create);
 
+uploadsRouter.get("/:id", uploadsController.getProcessedData);
+
 export default uploadsRouter;

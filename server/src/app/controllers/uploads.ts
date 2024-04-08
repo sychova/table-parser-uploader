@@ -16,9 +16,9 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const createCSV = async () => {};
+// const createCSV = async () => {};
 
-const createXLSX = async () => {};
+// const createXLSX = async () => {};
 
 const create = async (req: Request, res: Response) => {
   try {
@@ -29,10 +29,6 @@ const create = async (req: Request, res: Response) => {
     if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
       res.json({ error: "File format not supported" });
     }
-
-    // I only have this if csv
-    // const ttt = JSON.parse(req.body.actionParamSets);
-    // console.log("req.body.actionParamSets", ttt);
 
     const parsedFile: any = await parsingService.parse(req.file);
 
@@ -75,4 +71,6 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-export { getAll, create };
+const getProcessedData = (id: string) => {};
+
+export { getAll, create, getProcessedData };
