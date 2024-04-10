@@ -15,8 +15,6 @@ const theme = createTheme({
 export default function App() {
   const [uploads, setUploads] = useState<UploadDb[]>([]);
 
-  console.log("uploads", uploads);
-
   const handleGetUploads = async () => {
     try {
       const response = await fetch("http://localhost:5000/uploads", {

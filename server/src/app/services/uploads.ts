@@ -1,15 +1,29 @@
 import { Repository } from "typeorm";
 
 import { AppDataSource } from "../../data-source";
-import { UploadsLog } from "../entities";
+import {
+  UploadsLog,
+  DimensionCoordinates,
+  UploadsLogActionsParams,
+} from "../entities";
 
 const uploadsRepository: Repository<UploadsLog> =
   AppDataSource.getRepository(UploadsLog);
+
+const dimensionCoordinates: Repository<DimensionCoordinates> =
+  AppDataSource.getRepository(DimensionCoordinates);
+
+const uploadsLogActionsParams: Repository<UploadsLogActionsParams> =
+  AppDataSource.getRepository(UploadsLogActionsParams);
 
 const getAll = async (): Promise<UploadsLog[]> => {
   const uploads: UploadsLog[] = await uploadsRepository.find({
     relations: ["importType", "actionParams", "actionParams.action"],
   });
+
+  await getUploadData(1);
+
+  await getUploadActions(1);
 
   return uploads;
 };
@@ -36,4 +50,26 @@ const create = async (newUploadData: any) => {
   return upload;
 };
 
-export { getAll, getById, create };
+const getUploadData = async (id: number) => {
+  const data: DimensionCoordinates[] = await dimensionCoordinates.find({
+    where: { importData: { id } },
+    select: ["x", "y", "z"],
+  });
+
+  return data;
+};
+
+const getUploadActions = async (id: number) => {
+  const actionsDb: UploadsLogActionsParams[] =
+    await uploadsLogActionsParams.find({
+      relations: ["action"],
+      where: {
+        upload: { id },
+      },
+      select: ["action", "param"],
+    });
+
+  return actionsDb;
+};
+
+export { getAll, getById, create, getUploadData, getUploadActions };

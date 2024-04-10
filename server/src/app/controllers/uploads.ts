@@ -9,6 +9,8 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const uploads: UploadsLog[] = await uploadsService.getAll();
 
+    processUploadData(1);
+
     res.json(uploads);
   } catch (error) {
     console.error(error);
@@ -71,6 +73,18 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const getProcessedData = (id: string) => {};
+const processData = (data: any, actions: any) => {
+  console.log("data", data);
 
-export { getAll, create, getProcessedData };
+  console.log("actions", actions);
+};
+
+const processUploadData = async (id: number) => {
+  const data = await uploadsService.getUploadData(id);
+
+  const actions = await uploadsService.getUploadActions(id);
+
+  processData(data, actions);
+};
+
+export { getAll, create, processUploadData };
