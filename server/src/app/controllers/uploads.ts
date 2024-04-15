@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 
-import { UploadsLog } from "../entities";
+import {
+  DimensionCoordinates,
+  UploadsLog,
+  UploadsLogActionsParams,
+} from "../entities";
 import { parsingService, uploadsService, actionsService } from "../services";
+import { ParsedFile } from "../constants/interfaces";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xls", ".xlsx"];
 
@@ -26,14 +31,14 @@ const create = async (req: Request, res: Response) => {
       res.json({ error: "File format not supported" });
     }
 
-    const parsedFile: any = await parsingService.parse(req.file);
+    const parsedFile: ParsedFile = await parsingService.parse(req.file!);
 
-    const upload: any = await uploadsService.create({
-      name: req.file?.originalname,
-      size: req.file?.size,
+    const upload: UploadsLog = await uploadsService.create({
+      name: req.file?.originalname!,
+      size: req.file?.size!,
       format: req.file?.originalname.slice(
         req.file?.originalname.lastIndexOf(".")
-      ),
+      )!,
       path: `${req.file?.destination}/${req.file?.originalname}`,
       importType: 1,
     });
@@ -70,9 +75,10 @@ const create = async (req: Request, res: Response) => {
 const processUpload = async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
 
-  const data = await uploadsService.getUploadData(id);
+  const data: DimensionCoordinates[] = await uploadsService.getUploadData(id);
 
-  const actions = await uploadsService.getUploadActions(id);
+  const actions: UploadsLogActionsParams[] =
+    await uploadsService.getUploadActions(id);
 
   const processedData = await actionsService.processData(data, actions);
 

@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 
 import Title from "./Title";
-import { UploadDb } from "./constants/interfaces";
+import { ActionParamsDb, UploadDb } from "./constants/interfaces";
 
 export default function UploadHistory({
   uploads,
 }: {
   uploads: UploadDb[];
 }): ReactElement {
-  const handleGetProcessed = async (id: any) => {
+  const handleGetProcessed = async (id: number) => {
     try {
       const response = await fetch(`http://localhost:5000/uploads/${id}`, {
         method: "GET",
@@ -71,7 +71,7 @@ export default function UploadHistory({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {uploads.map((upload: any) => (
+                {uploads.map((upload: UploadDb) => (
                   <TableRow
                     key={upload.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -82,7 +82,7 @@ export default function UploadHistory({
                     <TableCell align="right">{upload.importType}</TableCell>
                     <TableCell align="right">
                       {upload.actionParams
-                        .map((elem: any) => {
+                        .map((elem: ActionParamsDb) => {
                           return elem.action?.name;
                         })
                         .join(" | ")}

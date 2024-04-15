@@ -15,7 +15,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ActionsConfig from "./ActionParamAdd";
 import ActionParamElement from "./ActionParamElement";
 import Title from "./Title";
-import { ActionParamSet } from "./constants/interfaces";
+import { ActionParamSet, UploadDb } from "./constants/interfaces";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,7 +29,10 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function FileUploader(props: any) {
+export default function FileUploader(props: {
+  uploads: UploadDb[];
+  setUploads: Function;
+}) {
   const { uploads, setUploads } = props;
 
   const [file, setFile] = useState<File | null>(null);
@@ -37,9 +40,11 @@ export default function FileUploader(props: any) {
   const [isAllowedExtension, setIsAllowedExtension] = useState<boolean>(true);
   const [actionParamSets, setActionParamSets] = useState<ActionParamSet[]>([]);
 
-  const handleUploadExtensionValidation = async (e: any) => {
+  const handleUploadExtensionValidation = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const ALLOWED_EXTENSIONS = [".csv", ".xlsx", ".xls"];
-    const file = e.target.files[0];
+    const file = e.target.files![0];
 
     const extension = file!.name.slice(file!.name.lastIndexOf("."));
     setExtension(extension);
@@ -54,8 +59,8 @@ export default function FileUploader(props: any) {
   };
 
   const handleUpload = async () => {
-    const formData: any = new FormData();
-    formData.append("file", file);
+    const formData: FormData = new FormData();
+    formData.append("file", file!);
     formData.append(
       "actionParamSets",
       JSON.stringify(

@@ -5,6 +5,13 @@ import csvtojson from "csvtojson";
 import { AppDataSource } from "../../data-source";
 import { ImportTypeActions, UploadsLogActionsParams } from "../entities";
 import DimensionCoordinates from "../entities/dimensionCoordinates";
+import {
+  Action,
+  Coordinate,
+  ParsedFile,
+  ActionParam,
+  FileData,
+} from "../constants/interfaces";
 
 const dimensionCoordinatesRepository: Repository<DimensionCoordinates> =
   AppDataSource.getRepository(DimensionCoordinates);
@@ -15,8 +22,10 @@ const importTypeActionsRepository: Repository<ImportTypeActions> =
 const uploadsLogActionsParams: Repository<UploadsLogActionsParams> =
   AppDataSource.getRepository(UploadsLogActionsParams);
 
-const parseCSV = async (file: any): Promise<any> => {
-  const data = await csvtojson().fromFile(
+const parseCSV = async (
+  file: FileData
+): Promise<{ data: Coordinate[]; actions: Action[] }> => {
+  const data: Coordinate[] = await csvtojson().fromFile(
     `${file.destination}/${file.originalname}`
   );
 
@@ -26,19 +35,27 @@ const parseCSV = async (file: any): Promise<any> => {
   };
 };
 
-const parseXLSX = async (file: any): Promise<any> => {
+const parseXLSX = async (
+  file: FileData
+): Promise<{ data: Coordinate[]; actions: Action[] }> => {
   const fileRead = XLSX.readFile(`${file.destination}/${file.originalname}`);
   const fileSheets = fileRead.SheetNames;
 
-  const data = XLSX.utils.sheet_to_json(fileRead.Sheets[fileSheets[0]], {
-    blankrows: false,
-    defval: "",
-  });
+  const data: Coordinate[] = XLSX.utils.sheet_to_json(
+    fileRead.Sheets[fileSheets[0]],
+    {
+      blankrows: false,
+      defval: "",
+    }
+  );
 
-  const actions = XLSX.utils.sheet_to_json(fileRead.Sheets[fileSheets[1]], {
-    blankrows: false,
-    defval: "",
-  });
+  const actions: Action[] = XLSX.utils.sheet_to_json(
+    fileRead.Sheets[fileSheets[1]],
+    {
+      blankrows: false,
+      defval: "",
+    }
+  );
 
   return {
     data,
@@ -46,7 +63,7 @@ const parseXLSX = async (file: any): Promise<any> => {
   };
 };
 
-const parse = async (file: any): Promise<void> => {
+const parse = async (file: FileData): Promise<ParsedFile> => {
   const fileFormat = file.originalname
     .slice(file.originalname.lastIndexOf(".") + 1)
     .toLowerCase();
@@ -59,17 +76,19 @@ const parse = async (file: any): Promise<void> => {
     case "xlsx":
       return parseXLSX(file);
     default:
-      console.log("File format not supported");
+      return Promise.reject(new Error("File format not supported"));
   }
 };
 
-const getActionIds = async (actions: any) => {
-  const actionsIds: any = {};
+const getActionIds = async (actions: Action[]) => {
+  const actionsIds: { [key: string]: number } = {};
+
   for (const elem of actions) {
-    const actionId: any = await importTypeActionsRepository.findOne({
-      select: ["id"],
-      where: { name: elem.action },
-    });
+    const actionId: ImportTypeActions =
+      (await importTypeActionsRepository.findOne({
+        select: ["id"],
+        where: { name: elem.action },
+      })) as ImportTypeActions;
 
     actionsIds[elem.action] = actionId.id;
   }
@@ -77,9 +96,10 @@ const getActionIds = async (actions: any) => {
   return actionsIds;
 };
 
-const saveData = async (logId: any, parsedData: any) => {
-  const data = parsedData.map((elem: any) => {
+const saveData = async (logId: number, parsedData: Coordinate[]) => {
+  const data = parsedData.map((elem: Coordinate) => {
     elem.importData = logId;
+
     return elem;
   });
 
@@ -92,15 +112,19 @@ const saveData = async (logId: any, parsedData: any) => {
 };
 
 const saveActions = async (
-  logId: any,
+  logId: number,
   fileExtension: string,
-  parsedActions: any
+  parsedActions: Action[]
 ) => {
   if (fileExtension === ".csv") {
-    const actions = await parsedActions.map((elem: any) => {
-      elem.upload = logId;
-      elem.action = elem.id;
-      return elem;
+    const actions: ActionParam[] = parsedActions.map((elem: Action) => {
+      const elemResult: ActionParam = {
+        param: elem.param,
+        action: elem.id!,
+        upload: logId,
+      };
+
+      return elemResult;
     });
 
     await uploadsLogActionsParams
@@ -112,12 +136,18 @@ const saveActions = async (
   }
 
   if ([".xls", ".xlsx"].includes(fileExtension)) {
-    const actionsIds: any = await getActionIds(parsedActions);
+    const actionsIds: { [key: string]: number } = await getActionIds(
+      parsedActions
+    );
 
-    const actions = await parsedActions.map((elem: any) => {
-      elem.upload = logId;
-      elem.action = actionsIds[elem.action];
-      return elem;
+    const actions: ActionParam[] = parsedActions.map((elem: Action) => {
+      const elemResult: ActionParam = {
+        param: elem.param,
+        upload: logId,
+        action: actionsIds[elem.action],
+      };
+
+      return elemResult;
     });
 
     await uploadsLogActionsParams

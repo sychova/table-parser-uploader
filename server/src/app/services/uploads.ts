@@ -6,6 +6,7 @@ import {
   DimensionCoordinates,
   UploadsLogActionsParams,
 } from "../entities";
+import { FileMetadata } from "../constants/interfaces";
 
 const uploadsRepository: Repository<UploadsLog> =
   AppDataSource.getRepository(UploadsLog);
@@ -24,16 +25,16 @@ const getAll = async (): Promise<UploadsLog[]> => {
   return uploads;
 };
 
-const getById = async (uploadId: any): Promise<any> => {
-  const upload = await uploadsRepository.findOne({
+const getById = async (uploadId: number): Promise<UploadsLog> => {
+  const upload: UploadsLog = (await uploadsRepository.findOne({
     where: { id: uploadId },
     relations: ["importType", "actionParams", "actionParams.action"],
-  });
+  })) as UploadsLog;
 
   return upload;
 };
 
-const create = async (newUploadData: any) => {
+const create = async (newUploadData: FileMetadata): Promise<UploadsLog> => {
   const upload: UploadsLog = uploadsRepository.create({
     name: newUploadData.name,
     size: newUploadData.size,

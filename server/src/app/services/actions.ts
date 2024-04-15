@@ -1,28 +1,33 @@
 import { Repository } from "typeorm";
 
 import { AppDataSource } from "../../data-source";
-import { ImportTypeActions } from "../entities";
+import {
+  DimensionCoordinates,
+  ImportTypeActions,
+  UploadsLogActionsParams,
+} from "../entities";
+import { Coordinate } from "../constants/interfaces";
 
 const actionsRepository: Repository<ImportTypeActions> =
   AppDataSource.getRepository(ImportTypeActions);
 
 const dataProcessingActions: { [key: string]: Function } = {
-  moveByX: (coordinate: any, param: number) => {
+  moveByX: (coordinate: Coordinate, param: number) => {
     coordinate.x += param;
 
     return coordinate;
   },
-  moveByY: (coordinate: any, param: number) => {
+  moveByY: (coordinate: Coordinate, param: number) => {
     coordinate.y += param;
 
     return coordinate;
   },
-  moveByZ: (coordinate: any, param: number) => {
+  moveByZ: (coordinate: Coordinate, param: number) => {
     coordinate.z += param;
 
     return coordinate;
   },
-  rotateByX: (coordinate: any, param: number) => {
+  rotateByX: (coordinate: Coordinate, param: number) => {
     const angle = (param * Math.PI) / 180;
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
@@ -34,7 +39,7 @@ const dataProcessingActions: { [key: string]: Function } = {
 
     return coordinate;
   },
-  rotateByY: (coordinate: any, param: number) => {
+  rotateByY: (coordinate: Coordinate, param: number) => {
     const angle = (param * Math.PI) / 180;
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
@@ -46,7 +51,7 @@ const dataProcessingActions: { [key: string]: Function } = {
 
     return coordinate;
   },
-  rotateByZ: (coordinate: any, param: number) => {
+  rotateByZ: (coordinate: Coordinate, param: number) => {
     const angle = (param * Math.PI) / 180;
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
@@ -66,9 +71,12 @@ const getAll = async (): Promise<ImportTypeActions[]> => {
   return actions;
 };
 
-const processData = async (data: any, actions: any) => {
-  await data.forEach(async (elem: any) => {
-    await actions.forEach((action: any) => {
+const processData = async (
+  data: DimensionCoordinates[],
+  actions: UploadsLogActionsParams[]
+) => {
+  data.forEach(async (elem: DimensionCoordinates) => {
+    actions.forEach((action: UploadsLogActionsParams) => {
       elem = dataProcessingActions[action.action.name](elem, action.param);
     });
   });

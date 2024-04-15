@@ -10,9 +10,11 @@ export default function ActionParamElement({
   actionParamSet: ActionParamSet;
   setActionParamSets: Function;
 }) {
-  const handleDeleteActionParamSetDelete = async (keyId: any) => {
-    setActionParamSets((actionParamSets: any) => [
-      ...actionParamSets.filter((element: any) => element.keyId !== keyId),
+  const handleDeleteActionParamSetDelete = async (keyId: string) => {
+    setActionParamSets((actionParamSets: ActionParamSet[]) => [
+      ...actionParamSets.filter(
+        (element: ActionParamSet) => element.keyId !== keyId
+      ),
     ]);
   };
 
