@@ -21,10 +21,6 @@ const getAll = async (): Promise<UploadsLog[]> => {
     relations: ["importType", "actionParams", "actionParams.action"],
   });
 
-  await getUploadData(1);
-
-  await getUploadActions(1);
-
   return uploads;
 };
 

@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 
 import Title from "./Title";
@@ -18,6 +19,20 @@ export default function UploadHistory({
 }: {
   uploads: UploadDb[];
 }): ReactElement {
+  const handleGetProcessed = async (id: any) => {
+    try {
+      const response = await fetch(`http://localhost:5000/uploads/${id}`, {
+        method: "GET",
+      });
+
+      const data = await response.json();
+
+      console.log("data", data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Grid
       item
@@ -52,7 +67,7 @@ export default function UploadHistory({
                   <TableCell>Name</TableCell>
                   <TableCell align="right">Import type</TableCell>
                   <TableCell align="right">Actions</TableCell>
-                  <TableCell align="right">Upload date</TableCell>
+                  <TableCell align="right"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -72,7 +87,15 @@ export default function UploadHistory({
                         })
                         .join(" | ")}
                     </TableCell>
-                    <TableCell align="right">{upload.createdDate}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleGetProcessed(upload.id)}
+                      >
+                        Get processed
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

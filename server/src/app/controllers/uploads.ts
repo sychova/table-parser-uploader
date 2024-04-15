@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { UploadsLog } from "../entities";
-import { parsingService, uploadsService } from "../services";
+import { parsingService, uploadsService, actionsService } from "../services";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xls", ".xlsx"];
 
@@ -9,18 +9,12 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const uploads: UploadsLog[] = await uploadsService.getAll();
 
-    processUploadData(1);
-
     res.json(uploads);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-// const createCSV = async () => {};
-
-// const createXLSX = async () => {};
 
 const create = async (req: Request, res: Response) => {
   try {
@@ -73,18 +67,16 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const processData = (data: any, actions: any) => {
-  console.log("data", data);
+const processUpload = async (req: Request, res: Response): Promise<void> => {
+  const id = Number(req.params.id);
 
-  console.log("actions", actions);
-};
-
-const processUploadData = async (id: number) => {
   const data = await uploadsService.getUploadData(id);
 
   const actions = await uploadsService.getUploadActions(id);
 
-  processData(data, actions);
+  const processedData = await actionsService.processData(data, actions);
+
+  res.json(processedData);
 };
 
-export { getAll, create, processUploadData };
+export { getAll, create, processUpload };
