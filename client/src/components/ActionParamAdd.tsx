@@ -22,7 +22,7 @@ export default function ActionsConfig({
   setActionParamSets: Function;
 }) {
   const [actionsDb, setActionsDb] = useState<ActionDb[]>([]);
-  const [action, setAction] = useState<number>();
+  const [action, setAction] = useState<number | "">("");
   const [param, setParam] = useState<number>();
 
   const handleGetAllActions = async () => {
@@ -80,6 +80,7 @@ export default function ActionsConfig({
             label="Action"
             onChange={(e) => setAction(Number(e.target.value))}
           >
+            <MenuItem value="">None</MenuItem>
             {actionsDb.map((actionItem) => (
               <MenuItem key={actionItem.id} value={actionItem.id}>
                 {actionItem.name}
@@ -92,7 +93,7 @@ export default function ActionsConfig({
           <TextField
             id="outlined-basic"
             label="Parameter"
-            value={param}
+            value={param || ""}
             variant="outlined"
             onChange={(e) => setParam(Number(e.target.value))}
           />
